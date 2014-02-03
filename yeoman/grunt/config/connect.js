@@ -1,8 +1,8 @@
 // The actual grunt server settings
 module.exports = {
     options: {
-        port: 9000,
-        livereload: 35729,
+        port: 9090,
+        livereload: 35730,
         // Change this to '0.0.0.0' to access the server from outside
         hostname: 'localhost'
     },

@@ -13,7 +13,7 @@ module.exports = {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
         tasks: ['jshint'],
         options: {
-            livereload: true
+            livereload: '<%= connect.options.livereload %>'
         }
     },
     jstest: {

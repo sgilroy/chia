@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$//chia.iml" filepath="$PROJECT_DIR$//chia.iml" />
+      <module fileurl="file://$PROJECT_DIR$/chia.iml" filepath="$PROJECT_DIR$/chia.iml" />
       <module fileurl="file://$PROJECT_DIR$/platforms/android/chia-android.iml" filepath="$PROJECT_DIR$/platforms/android/chia-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/yeoman/app/chia-web.iml" filepath="$PROJECT_DIR$/yeoman/app/chia-web.iml" />
     </modules>
