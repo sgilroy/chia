@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>yeoman</title>
+        <title>Chia</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -17,6 +17,7 @@
         <!-- endbuild -->
         <!-- build:css(.tmp) styles/main.css -->
         <link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" href="styles/slider.css">
         <!-- endbuild -->
         <script src="bower_components/modernizr/modernizr.js"></script>
 
@@ -26,20 +27,28 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-
         <div id="messagesDiv">
             <div ng-repeat="msg in messages"><em>{{msg.from}}</em>: {{msg.body}}</div>
         </div>
+        <slider floor="0" ceiling="100" ng-model="vibration.level"></slider>
+        <p/>
         <input type="text" ng-model="name" placeholder="Name">
         <input type="text" ng-model="msg" ng-keydown="messageKeyDownHandler($event)" placeholder="Message...">
-        <button ng-click="addMessage()">Send</button>
-
+        <button type="button" class="btn btn-primary" ng-click="addMessage()">Send</button>
+<!--
+        <div class="btn-group">
+            <button type="button" class="btn" ng-class="{'btn-primary': vibrating}" ng-click="vibrate()">Vibrate</button>
+        </div>
+-->
+    
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
         <script src="bower_components/jquery/jquery.js"></script>
         <script src="bower_components/angular/angular.js"></script>
         <script src="bower_components/firebase/firebase-debug.js"></script>
         <script src="bower_components/angularfire/angularfire.js"></script>
+        <script src="bower_components/angular-touch/angular-touch.js"></script>
+        <script src="bower_components/angular-slider/src/angular-slider.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
 
@@ -52,6 +61,8 @@
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
             ga('create','UA-XXXXX-X');ga('send','pageview');
         </script>
+
+        <script src="cordova.js"></script>
 
         <!-- build:js scripts/plugins.js -->
         <script src="bower_components/sass-bootstrap/js/affix.js"></script>

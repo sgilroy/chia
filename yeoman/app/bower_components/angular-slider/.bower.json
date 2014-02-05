@@ -1,0 +1,31 @@
+{
+  "name": "angular-slider",
+  "version": "0.1.1",
+  "main": "./build/angular-slider.min.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "dependencies": {
+    "angular": "*",
+    "angular-touch": "*"
+  },
+  "devDependencies": {
+    "angular-mocks": "*",
+    "angular-scenario": "*"
+  },
+  "resolutions": {
+    "angular": "v1.2.9"
+  },
+  "homepage": "https://github.com/Venturocket/angular-slider",
+  "_release": "0.1.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.1.1",
+    "commit": "fd9ab1230ab2efe00fe0a0009cfee1fba6b78bf0"
+  },
+  "_source": "https://github.com/Venturocket/angular-slider.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/Venturocket/angular-slider.git"
+}

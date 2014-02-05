@@ -7,7 +7,8 @@
     "jquery": "~1.10.2",
     "firebase": "~1.0.2",
     "angularfire": "~0.6.0",
-    "angular": "~1.2.10"
+    "angular": "~1.2.10",
+    "angular-slider": "https://github.com/Venturocket/angular-slider.git"
   },
   "devDependencies": {}
 }

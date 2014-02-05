@@ -2,7 +2,20 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/platforms/android/assets/www" />
+      <excludeFolder url="file://$MODULE_DIR$/platforms/android/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/platforms/android/cordova" />
+      <excludeFolder url="file://$MODULE_DIR$/platforms/android/gen" />
+      <excludeFolder url="file://$MODULE_DIR$/platforms/android/libs" />
+      <excludeFolder url="file://$MODULE_DIR$/platforms/ios/Chia" />
+      <excludeFolder url="file://$MODULE_DIR$/platforms/ios/Chia.xcodeproj" />
+      <excludeFolder url="file://$MODULE_DIR$/platforms/ios/CordovaLib" />
+      <excludeFolder url="file://$MODULE_DIR$/platforms/ios/build" />
+      <excludeFolder url="file://$MODULE_DIR$/platforms/ios/cordova" />
+      <excludeFolder url="file://$MODULE_DIR$/platforms/ios/www" />
+      <excludeFolder url="file://$MODULE_DIR$/www" />
+    </content>
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
