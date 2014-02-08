@@ -27,6 +27,16 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
+        <button type="button" class="btn btn-primary" ng-click="refreshDeviceList()">Refresh Devices</button>
+        <ul>
+            <li ng-repeat="device in deviceList" ng-click="connect(device.uuid)">
+                <b>{{device.name}}</b><br/>
+                RSSI: {{device.rssi}} &nbsp;|&nbsp;
+                Advertising: {{device.advertising}}<br/>
+                {{device.uuid}}
+            </li>
+        </ul>
+
         <div id="messagesDiv">
             <div ng-repeat="msg in messages"><em>{{msg.from}}</em>: {{msg.body}}</div>
         </div>
@@ -81,6 +91,7 @@
 
         <!-- build:js({app,.tmp}) scripts/main.js -->
         <script src="scripts/main.js"></script>
+        <script src="scripts/fsCordova.js"></script>
         <!-- endbuild -->
 </body>
 </html>
