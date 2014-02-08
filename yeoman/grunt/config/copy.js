@@ -23,7 +23,8 @@ module.exports = {
                 'images/{,*/}*.webp',
                 '{,*/}*.html',
                 'styles/fonts/{,*/}*.*',
-                'bower_components/' + (this.includeCompass ? 'sass-' : '') + 'bootstrap/' + (this.includeCompass ? 'fonts/' : 'dist/fonts/') +'*.*'
+                'bower_components/' + (this.includeCompass ? 'sass-' : '') + 'bootstrap/' + (this.includeCompass ? 'fonts/' : 'dist/fonts/') +'*.*',
+                'bower_components/sass-bootstrap/fonts/*.*'
             ]
         }]
     },

@@ -27,6 +27,9 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
+        <span class="device-state glyphicon" ng-class="{'offline': 'glyphicon-eye-close', 'discovering': 'glyphicon-eye-open', 'connected': 'glyphicon-transfer'}[deviceState]"></span>
+        {{deviceState}}
+        
         <button type="button" class="btn btn-primary" ng-click="refreshDeviceList()">Refresh Devices</button>
         <ul>
             <li ng-repeat="device in deviceList" ng-click="connect(device.uuid)">

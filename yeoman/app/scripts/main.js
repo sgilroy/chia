@@ -8,8 +8,9 @@ var app = angular.module('chia', [
 
 app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 'CordovaService', function($scope, $firebase, $timeout, $interval, CordovaService) {
     function initialize() {
+        $scope.deviceState = 'offline';
+        
         var messagesReference = new Firebase('https://radiant-fire-2876.firebaseio.com/messages');
-    //    var vibrationReference = new Firebase('https://radiant-fire-2876.firebaseio.com/vibration');
         var vibrationLevelReference = new Firebase('https://radiant-fire-2876.firebaseio.com/vibration/level');
         $scope.messages = $firebase(messagesReference);
     //    $scope.vibration = $firebase(vibrationReference);
@@ -43,7 +44,7 @@ app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 
 
     CordovaService.ready.then(function() {
         // Cordova is ready
-        $scope.refreshDeviceList();
+        $scope.startDiscover();
     });
 
     function updateCordovaDebugInfo() {
@@ -71,6 +72,7 @@ app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 
         // deviceList.innerHTML = ''; // empties the list
         $scope.deviceList = [];
         rfduino.discover(5, onDiscoverDevice, onError);
+        $scope.deviceState = 'discovering';
     };
         
     function onDiscoverDevice(device) {
@@ -87,13 +89,17 @@ app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 
 */
         
         $scope.deviceList.push(device);
+        $scope.connect(device.uuid);
     }
         
     $scope.connect = function(uuid) {
         var onConnect = function() {
-                rfduino.onData(onData, onError);
+            $scope.stopDiscover();
+            
+            $scope.deviceState = 'connected';
+            rfduino.onData(onData, onError);
 //                showDetailPage();
-            };
+        };
 
         rfduino.connect(uuid, onConnect, onError);
     };
@@ -108,6 +114,7 @@ app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 
     }
         
     function disconnect() {
+        $scope.deviceState = 'offline';
         rfduino.disconnect(showMainPage, onError);
     }
         
@@ -122,16 +129,18 @@ app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 
     }
         
     function onError(reason) {
-        alert(reason); // real apps should use notification.alert
+        console.log(reason); // real apps should use notification.alert
+        $scope.deviceState = 'offline';
+        $scope.startDiscover();
     }
     
-    var stop;
+    var stopVibrationInterval;
     $scope.startVibration = function () {
         // Don't start a new vibration if we are already vibrating
-        if (angular.isDefined(stop)) return;
+        if (angular.isDefined(stopVibrationInterval)) return;
 
         if (navigator && navigator.notification) {
-            stop = $interval(function () {
+            stopVibrationInterval = $interval(function () {
                 if ($scope.vibration.level > 0) {
                     navigator.notification.vibrate($scope.vibration.level);
                 } else {
@@ -141,9 +150,35 @@ app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 
         }
     };
     
+    $scope.stopVibration = function () {
+        if (angular.isDefined(stopVibrationInterval)) {
+            $interval.cancel(stopVibrationInterval);
+            stopVibrationInterval = undefined;
+        }
+    };
+
+    var stopDiscoverInterval;
+    $scope.startDiscover = function () {
+        // Don't start a new discover if we are already discovering
+        if (angular.isDefined(stopDiscoverInterval)) return;
+
+        if (window.rfduino) {
+            stopDiscoverInterval = $interval(function () {
+                $scope.refreshDeviceList();
+            }, 5200); // discover is running for 5 seconds, so wait a little longer before starting again
+        }
+    };
+    
+    $scope.stopDiscover = function () {
+        if (angular.isDefined(stopDiscoverInterval)) {
+            $interval.cancel(stopDiscoverInterval);
+            stopDiscoverInterval = undefined;
+        }
+    };
+
     function updateMotor(level) {
         var levelNormalized = level * 255 / 100;
-        if (rfduino) {
+        if (window.rfduino) {
             rfduino.isConnected(
                 function() {
                     console.log("RFduino is connected");
@@ -163,13 +198,6 @@ app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 
             );
         }
     }
-
-    $scope.stopVibration = function () {
-        if (angular.isDefined(stop)) {
-            $interval.cancel(stop);
-            stop = undefined;
-        }
-    };
 
     $scope.$on('$destroy', function () {
         // Make sure that the interval is destroyed too
