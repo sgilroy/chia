@@ -28,10 +28,9 @@
         <![endif]-->
 
         <span class="device-state glyphicon" ng-class="{'offline': 'glyphicon-eye-close', 'discovering': 'glyphicon-eye-open', 'connected': 'glyphicon-transfer'}[deviceState]"></span>
-        {{deviceState}}
         
-        <button type="button" class="btn btn-primary" ng-click="refreshDeviceList()">Refresh Devices</button>
-        <ul>
+        <button type="button" class="btn btn-primary" ng-click="refreshDeviceList()" ng-if="false">Refresh Devices</button>
+        <ul ng-if="false">
             <li ng-repeat="device in deviceList" ng-click="connect(device.uuid)">
                 <b>{{device.name}}</b><br/>
                 RSSI: {{device.rssi}} &nbsp;|&nbsp;
