@@ -7,6 +7,16 @@ var app = angular.module('chia', [
 ]);
 
 app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 'CordovaService', function($scope, $firebase, $timeout, $interval, CordovaService) {
+    function updateFromVibrationLevel(newValue) {
+        console.log("watch $scope.vibration: " + JSON.stringify($scope.vibration));
+        if (newValue > 0) {
+            $scope.startVibration();
+        } else {
+            $scope.stopVibration();
+        }
+        updateMotor(newValue);
+    }
+
     function initialize() {
         $scope.deviceState = 'offline';
         
@@ -30,13 +40,7 @@ app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 
         });
         
         $scope.$watch("vibration.level", function(newValue, oldValue) {
-            console.log("watch $scope.vibration: " + JSON.stringify($scope.vibration));
-            if (newValue > 0) {
-                $scope.startVibration();
-            } else {
-                $scope.stopVibration();
-            }
-            updateMotor(newValue);
+            updateFromVibrationLevel(newValue);
         });
     }
     
@@ -97,6 +101,9 @@ app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 
             $scope.stopDiscover();
             
             $scope.deviceState = 'connected';
+            $timeout(function() {
+                updateFromVibrationLevel($scope.vibration.level);
+            }, 1000);
             rfduino.onData(onData, onError);
 //                showDetailPage();
         };
