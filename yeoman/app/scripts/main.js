@@ -7,14 +7,23 @@ var app = angular.module('chia', [
 ]);
 
 app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 'CordovaService', function($scope, $firebase, $timeout, $interval, CordovaService) {
-    function updateFromVibrationLevel(newValue) {
-        console.log("watch $scope.vibration: " + JSON.stringify($scope.vibration));
+    function outputVibration(newValue) {
         if (newValue > 0) {
             $scope.startVibration();
         } else {
             $scope.stopVibration();
         }
         updateMotor(newValue);
+        $scope.vibration.output = newValue;
+    }
+
+    function updateFromVibrationLevel(newValue) {
+//        console.log("watch $scope.vibration: " + JSON.stringify($scope.vibration));
+        if ($scope.vibration.pattern) {
+            $scope.startPattern();
+        } else {
+            outputVibration(newValue);
+        }
     }
 
     function initialize() {
@@ -31,13 +40,11 @@ app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 
             $scope.vibrate();
         });
     
-        console.log("before bind $scope.vibration: " + JSON.stringify($scope.vibration));
         $scope.vibration.level.$bind($scope, "vibration.level");
-        console.log("after bind $scope.vibration: " + JSON.stringify($scope.vibration));
         
-        $scope.vibration.level.$on("change", function() {
-            console.log("$scope.vibration.level.$on change $scope.vibration: " + JSON.stringify($scope.vibration));
-        });
+//        $scope.vibration.level.$on("change", function() {
+//            console.log("$scope.vibration.level.$on change $scope.vibration: " + JSON.stringify($scope.vibration));
+//        });
         
         $scope.$watch("vibration.level", function(newValue, oldValue) {
             updateFromVibrationLevel(newValue);
@@ -164,6 +171,41 @@ app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 
         }
     };
 
+    var startTime;
+    var period = 1000;
+    function vibrationPattern() {
+        if (!startTime) {
+            startTime = new Date();
+        }
+        
+        var delta = (new Date()).valueOf() - startTime.valueOf();
+        var x = (delta % period) / period;
+        return (x > 0.5 ? $scope.vibration.level : 0);
+//        return (x > 0.5 ? 0 : $scope.vibration.level);
+//        return delta;
+    }
+    
+    var stopPatternInterval;
+    $scope.startPattern = function () {
+        // Don't start a new pattern if we are already in an interval
+        if (angular.isDefined(stopPatternInterval)) return;
+
+        stopPatternInterval = $interval(function () {
+            if ($scope.vibration.level > 0) {
+                outputVibration(vibrationPattern());
+            } else {
+                $scope.stopPattern();
+            }
+        }, 500);
+    };
+    
+    $scope.stopPattern = function () {
+        if (angular.isDefined(stopPatternInterval)) {
+            $interval.cancel(stopPatternInterval);
+            stopPatternInterval = undefined;
+        }
+    };
+
     var stopDiscoverInterval;
     $scope.startDiscover = function () {
         // Don't start a new discover if we are already discovering
@@ -183,8 +225,25 @@ app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 
         }
     };
 
+    function logSlider(position) {
+        // position will be between 0 and 100
+        var minp = 0;
+        var maxp = 100;
+
+        // The result should be between 0 and 255
+        var minv = Math.log(0);
+        var maxv = Math.log(255);
+
+        // calculate adjustment factor
+        var scale = (maxv - minv) / (maxp - minp);
+
+        return Math.exp(minv + scale * (position - minp));
+    }
+    
     function updateMotor(level) {
-        var levelNormalized = level * 255 / 100;
+//        var levelNormalized = level * 255 / 100;
+        var levelNormalized = logSlider(level);
+//        var levelNormalized = level;
         if (window.rfduino) {
             rfduino.isConnected(
                 function() {
