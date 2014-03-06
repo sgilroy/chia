@@ -3,12 +3,16 @@
 var app = angular.module('chia', [
     'firebase',
     'vr.directives.slider',
-    'fsCordova'
+    'fsCordova',
+    'ngStorage'
 ]);
 
-app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 'CordovaService', function($scope, $firebase, $timeout, $interval, CordovaService) {
+app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 'CordovaService', '$localStorage', function($scope, $firebase, $timeout, $interval, CordovaService, $localStorage) {
+    $scope.useBluetooth = $localStorage.useBluetooth;
+    $scope.phoneVibration = false;
+
     function outputVibration(newValue) {
-        if (newValue > 0) {
+        if (newValue > 0 && $scope.phoneVibration) {
             $scope.startVibration();
         } else {
             $scope.stopVibration();
@@ -48,6 +52,23 @@ app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 
         
         $scope.$watch("vibration.level", function(newValue, oldValue) {
             updateFromVibrationLevel(newValue);
+        });
+
+        $scope.$watch("phoneVibration", function(newValue, oldValue) {
+            updateFromVibrationLevel($scope.vibration.level);
+        });
+
+        $scope.$watch("useBluetooth", function(newValue, oldValue) {
+            $localStorage.useBluetooth = newValue;
+            if (newValue && (!$scope.deviceState || $scope.deviceState === 'offline')) {
+                $scope.startDiscover();
+            } else if (!newValue) {
+                if ($scope.deviceState === 'discovering') {
+                    $scope.stopDiscover();
+                } else if ($scope.deviceState === 'connected') {
+                    disconnect();
+                }
+            }
         });
     }
     
@@ -208,6 +229,10 @@ app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 
 
     var stopDiscoverInterval;
     $scope.startDiscover = function () {
+        if (!$scope.useBluetooth) {
+            return;
+        }
+
         // Don't start a new discover if we are already discovering
         if (angular.isDefined(stopDiscoverInterval)) return;
 
@@ -242,8 +267,8 @@ app.controller('MyController', ['$scope', '$firebase', '$timeout', '$interval', 
     
     function updateMotor(level) {
 //        var levelNormalized = level * 255 / 100;
-        var levelNormalized = logSlider(level);
-//        var levelNormalized = level;
+//        var levelNormalized = logSlider(level);
+        var levelNormalized = level;
         if (window.rfduino) {
             rfduino.isConnected(
                 function() {

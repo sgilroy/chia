@@ -45,6 +45,16 @@
         </div>
         <slider floor="0" ceiling="100" ng-model="vibration.level"></slider>
         <p/>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-model="phoneVibration">Phone vibration
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-model="useBluetooth">Bluetooth
+            </label>
+        </div>
         <input type="text" ng-model="name" placeholder="Name">
         <input type="text" ng-model="msg" ng-keydown="messageKeyDownHandler($event)" placeholder="Message...">
         <button type="button" class="btn btn-primary" ng-click="addMessage()">Send</button>
@@ -62,6 +72,7 @@
         <script src="bower_components/angularfire/angularfire.js"></script>
         <script src="bower_components/angular-touch/angular-touch.js"></script>
         <script src="bower_components/angular-slider/src/angular-slider.js"></script>
+        <script src="bower_components/ngstorage/ngStorage.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
 

@@ -1,14 +1,15 @@
 {
-  "name": "yeoman",
-  "private": true,
-  "dependencies": {
-    "sass-bootstrap": "~3.0.0",
-    "modernizr": "~2.6.2",
-    "jquery": "~1.10.2",
-    "firebase": "~1.0.2",
-    "angularfire": "~0.6.0",
-    "angular": "~1.2.10",
-    "angular-slider": "https://github.com/Venturocket/angular-slider.git"
-  },
-  "devDependencies": {}
+    "name": "yeoman",
+    "private": true,
+    "dependencies": {
+        "sass-bootstrap": "~3.0.0",
+        "modernizr": "~2.6.2",
+        "jquery": "~1.10.2",
+        "firebase": "~1.0.2",
+        "angularfire": "~0.6.0",
+        "angular": "~1.2.11",
+        "angular-slider": "https://github.com/Venturocket/angular-slider.git",
+        "ngstorage": "~0.3.0"
+    },
+    "devDependencies": {}
 }
